@@ -40,7 +40,7 @@ def add_salt_and_pepper_noise(image):
     return image.astype(np.uint8)
 
 # 随机擦除
-def random_erase(image, mask, p=0.5, scale=(0.02, 0.33), ratio=(0.5, 2.0), value=0):
+def random_erase(image, mask, p=0.25, scale=(0.02, 0.33), ratio=(0.5, 2.0), value=0):
     """
     Randomly erases a region of the image and mask.
     """
@@ -102,7 +102,10 @@ def random_stretch(image, mask):
 def random_rotate(image, mask):
     image = np.array(image)
     mask = np.array(mask)
-    angle = np.random.randint(-15, 16)   # 旋转角度
+    if np.random.rand() < 0.15:
+        angle = np.random.randint(-15, 16)
+    else:
+        angle = np.random.randint(0, 4) * 90   # 旋转角度
     (h, w) = image.shape
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
@@ -166,7 +169,7 @@ def main():
 
             # 保存增强后的图片和mask
             image_aug.save(os.path.join(im_aug_save_path, f'{im.split(".")[0]}_{i}.jpg'))
-            mask_aug.save(os.path.join(ma_aug_save_path, f'{ma.split(".")[0]}_{i}.jpg'))
+            mask_aug.save(os.path.join(ma_aug_save_path, f'{ma.split(".")[0]}_{i}.png'))
 
 if __name__ == "__main__":
     main()
