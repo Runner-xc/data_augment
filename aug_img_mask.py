@@ -40,7 +40,7 @@ def add_salt_and_pepper_noise(image):
     return image.astype(np.uint8)
 
 # 随机擦除
-def random_erase(image, mask, p=0.25, scale=(0.02, 0.33), ratio=(0.5, 2.0), value=0):
+def random_erase(image, mask, p=0.3, scale=(0.02, 0.33), ratio=(0.5, 2.0), value=0):
     """
     Randomly erases a region of the image and mask.
     """
@@ -102,7 +102,7 @@ def random_stretch(image, mask):
 def random_rotate(image, mask):
     image = np.array(image)
     mask = np.array(mask)
-    if np.random.rand() < 0.15:
+    if np.random.rand() < 0.2:
         angle = np.random.randint(-15, 16)
     else:
         angle = np.random.randint(0, 4) * 90   # 旋转角度
@@ -117,11 +117,11 @@ def random_rotate(image, mask):
 
 def main():
     # 设定数据增强的次数
-    num_augmentations = 30
+    num_augmentations = 40
 
     # 装载图片和mask掩码
-    image_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/now/img_output'
-    mask_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/now/mask_output'
+    image_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/img_output224'
+    mask_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/mask_output224'
     img_list = os.listdir(image_path)
     mask_list = os.listdir(mask_path)
     img_list = tqdm(img_list, desc="正在进行数据增强ing：")
@@ -134,11 +134,11 @@ def main():
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        im_aug_save_path = os.path.join(output_dir, 'img')
+        im_aug_save_path = os.path.join(output_dir, 'img_224')
         if not os.path.exists(im_aug_save_path):
             os.makedirs(im_aug_save_path)
 
-        ma_aug_save_path = os.path.join(output_dir, 'mask')
+        ma_aug_save_path = os.path.join(output_dir, 'mask_224')
         if not os.path.exists(ma_aug_save_path):
             os.makedirs(ma_aug_save_path)
 
