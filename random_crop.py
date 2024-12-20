@@ -18,10 +18,10 @@ def random_crop(image, mask, crop_size):
 
 def main():
     # 设定裁剪的小图片张数
-    num_crops = 100
+    num_crops = 80
 
     # 设定裁剪的大小
-    crop_size = 224
+    crop_size = 256
 
     # 装载图片和mask掩码
     image_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/eagleford'
@@ -36,10 +36,10 @@ def main():
         mask = Image.open(os.path.join(mask_path, ma))
 
         # 创建输出文件夹
-        img_output_dir = f"img_output_{crop_size}"
+        img_output_dir = f"img_output_changed_{crop_size}"
         if not os.path.exists(img_output_dir):
             os.makedirs(img_output_dir)
-        mask_output_dir = f"mask_output_{crop_size}"
+        mask_output_dir = f"mask_output_changed_{crop_size}"
         if not os.path.exists(mask_output_dir):
             os.makedirs(mask_output_dir)
 

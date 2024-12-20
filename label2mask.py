@@ -55,13 +55,17 @@ def labelme2mask_single_img(img_path, labelme_json_path):
 if __name__ == "__main__":
     img_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/eagleford'
     js_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/labels'
-    mask_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/img_masks'
+    mask_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/img_masks_1'
+    if not os.path.exists(mask_path):
+        os.makedirs(mask_path)
 
     # 0-背景，从 1 开始
     class_info = [
+        
         {'label':'Organic matter', 'type':'polygon', 'color':1},                    # polygon 多段线
         {'label':'Organic pore', 'type':'polygon', 'color':2},
         {'label':'Inorganic pore', 'type':'polygon', 'color':3},
+        {'label':'bg', 'type':'polygon', 'color':0},
         # {'label':'tower','type':'polygon','color':4},
         # {'label':'bus','type':'polygon','color':5},
         # {'label':'car','type':'polygon','color':6},
@@ -81,13 +85,8 @@ if __name__ == "__main__":
     #     img_mask = draw_annotation(img_path, img, os.path.join(js_path, js), class_info)
     #     cv2.imwrite(os.path.join(mask_path, img[:-4] + '.png'), img_mask)
     
-    for img in tqdm(img_list):
-        
-        try:
-            labelme_json_path = os.path.join(js_path, '.'.join(img.split('.')[:-1])+'.json')
-            img_mask = labelme2mask_single_img(os.path.join(img_path,img), labelme_json_path)
-            mask_name = img.split('.')[0] + '.png'
-            cv2.imwrite(os.path.join(mask_path, mask_name), img_mask)
-        
-        except Exception as E:
-            print(img_path, '转换失败', E)
+    for img in tqdm(img_list):  
+        labelme_json_path = os.path.join(js_path, '.'.join(img.split('.')[:-1])+'.json')
+        img_mask = labelme2mask_single_img(os.path.join(img_path,img), labelme_json_path)
+        mask_name = img.split('.')[0] + '.png'
+        cv2.imwrite(os.path.join(mask_path, mask_name), img_mask)
