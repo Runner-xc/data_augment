@@ -168,6 +168,36 @@ def sharpen(image, sigma=1.5):
     image_sharpened = Image.fromarray(sharpened)
     return image_sharpened
 
+import numpy as np
+from PIL import Image
+from scipy.ndimage import gaussian_filter
+
+def unsharp_mask(image, sigma=1.5, strength=0.8):
+    """
+    Apply unsharp masking to an image.
+    :param image: Input image (PIL Image or numpy array)
+    :param sigma: Standard deviation for Gaussian blur
+    :param strength: Strength of sharpening
+    """
+    if isinstance(image, np.ndarray):
+        image = Image.fromarray(image)
+    
+    # Convert to numpy array
+    arr = np.array(image).astype(np.float32)
+    
+    # Apply Gaussian blur
+    blurred = gaussian_filter(arr, sigma=sigma)
+    
+    # Calculate the mask
+    mask = arr - blurred
+    
+    # Apply the mask to the original image
+    sharpened = np.clip(arr + strength * mask, 0, 255).astype(np.uint8)
+    
+    # Convert back to PIL Image
+    sharpened_image = Image.fromarray(sharpened)
+    return sharpened_image
+
 
 
 def main():
@@ -175,8 +205,8 @@ def main():
     num_augmentations = 50
 
     # 装载图片和mask掩码
-    image_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/img_output_changed_256'
-    mask_path = '/mnt/c/VScode/WS-Hub/WS-label2mask/mask_output_changed_256'
+    image_path = '/mnt/e/VScode/WS-Hub/WS-label2mask/img_output_changed_256'
+    mask_path = '/mnt/e/VScode/WS-Hub/WS-label2mask/mask_output_changed_256'
     img_list = os.listdir(image_path)
     mask_list = os.listdir(mask_path)
     img_list = tqdm(img_list, desc="正在进行数据增强ing：")
@@ -229,11 +259,6 @@ def main():
             if np.random.rand() < 0.5:
                 image_aug, mask_aug = random_rotate(image_aug, mask_aug)
 
-            # # 伸缩变形
-            # image_aug, mask_aug = random_stretch(image_aug, mask_aug)
-
-            # # 透射变换
-            # image_aug, mask_aug = perspective_transform(image_aug, mask_aug)
 
             # 保存增强后的图片和mask
             if isinstance(image_aug, np.ndarray):
